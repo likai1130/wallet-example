@@ -1,0 +1,268 @@
+definitions:
+  core.Response:
+    properties:
+      code:
+        description: 数据集
+        type: integer
+      message:
+        type: string
+      requestId:
+        type: string
+    type: object
+  dto.BlockchainInsertReq:
+    properties:
+      chain_id:
+        type: integer
+      chain_name:
+        type: string
+      infra_http:
+        type: string
+      infra_websocket:
+        type: string
+      symbol:
+        type: string
+    type: object
+  dto.BlockchainUpdateReq:
+    properties:
+      chain_id:
+        type: integer
+      chain_name:
+        type: string
+      infra_http:
+        type: string
+      infra_websocket:
+        type: string
+      symbol:
+        type: string
+    type: object
+  sys.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+    type: object
+  v1.BlockChain:
+    properties:
+      chain_id:
+        type: integer
+      chain_name:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      infra_http:
+        type: string
+      infra_websocket:
+        type: string
+      symbol:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  v1.BlockChainList:
+    properties:
+      current_page:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/v1.BlockChain'
+        type: array
+      total_count:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: |-
+    基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档
+    添加qq群: 521386980 进入技术交流群 请先star，谢谢！
+  license:
+    name: MIT
+    url: https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md
+  title: go-admin API
+  version: 2.0.0
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: 系统健康检查
+      responses:
+        "200":
+          description: '{"code": 200, "data":{"status": "ok"} }'
+          schema:
+            $ref: '#/definitions/sys.Response'
+      summary: 健康检查
+      tags:
+      - 系统服务
+  /v1/chains:
+    get:
+      description: 获取接口管理列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: limit
+        type: integer
+      - description: 页码
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "message":"Ok","data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.BlockChainList'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/core.Response'
+      summary: 获取区块链列表
+      tags:
+      - 区块链管理
+    post:
+      description: 创建一个链
+      parameters:
+      - description: 链数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BlockchainInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message":"Ok"}'
+          schema:
+            $ref: '#/definitions/core.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/core.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/core.Response'
+      summary: 创建一个链
+      tags:
+      - 区块链管理
+  /v1/chains/{id}:
+    delete:
+      description: 根据id删除区块链
+      parameters:
+      - description: 主键Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, message:"Ok"}'
+          schema:
+            $ref: '#/definitions/core.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/core.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/core.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/core.Response'
+      summary: 根据id删除区块链
+      tags:
+      - 区块链管理
+    get:
+      description: 获取区块链详情
+      parameters:
+      - description: 主键Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, message:"ok", "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.BlockChain'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/core.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/core.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/core.Response'
+      summary: 获取区块链详情
+      tags:
+      - 区块链管理
+    put:
+      description: 更新区块链信息
+      parameters:
+      - description: 主键id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 链数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BlockchainUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message":"Ok"}'
+          schema:
+            $ref: '#/definitions/core.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/core.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/core.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/core.Response'
+      summary: 更新区块链信息
+      tags:
+      - 区块链管理
+  /version:
+    get:
+      consumes:
+      - application/json
+      description: 系统版本查询
+      responses:
+        "200":
+          description: '{"code": 200, "data":{"version": "latest"} }'
+          schema:
+            $ref: '#/definitions/sys.Response'
+      summary: 系统版本
+      tags:
+      - 系统服务
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

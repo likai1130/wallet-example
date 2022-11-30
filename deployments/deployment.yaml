@@ -1,0 +1,119 @@
+### deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-api
+  labels:
+    app: wallet-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wallet-api
+  template:
+    metadata:
+      labels:
+        app: wallet-api
+    spec:
+      containers:
+        - name: wallet-api
+          image: wallet-api:0.0.1
+          ports:
+            - containerPort: 8821
+          env:
+            - name: SETTINGS_APPLICATION_MODE
+              value: dev
+            - name: SETTINGS_APPLICATION_HOST
+              value: 127.0.0.1
+            - name: SETTINGS_APPLICATION_PORT
+              value: 8821
+            - name: SETTINGS_APPLICATION_READTIMEOUT
+              value: 1
+            - name: SETTINGS_APPLICATION_WRITERTIMEOUT
+              value: 2
+            - name: SETTINGS_LOGGER_PATH
+              value: ""
+            - name: SETTINGS_LOGGER_STDOUT
+              value: "stdout"
+            - name: SETTINGS_LOGGER_LEVEL
+              value: debug
+            - name: SETTINGS_DATABASE_DRIVER
+              value: mysql
+            - name: SETTINGS_DATABASE_SOURCE
+              value: root:root1234@tcp(127.0.0.1:3306)/wallet?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+            - name: EXTEND_SMS_SIGNNAME
+              value: "SIG20210825B1BAB9"
+            - name: EXTEND_SMS_TEMPLATECODE
+              value: "UTA21082708A7F9"
+            - name: EXTEND_SMS_PUBLICKEY
+              value: "4aoTwELq1JMIPOCu7KPj9G2QmlYjmgFIy4Q6H4nNY"
+            - name: EXTEND_SMS_PRIVATEKEY
+              value: "KAImWt7Rucu62z9IitWmDX40HqVQ4DQj5HQ2gGj2aFUn4d2FXWbOzol6YfAuTFXC7d"
+            - name: EXTEND_SMS_PROJECTID
+              value: "org-vhxub0"
+            - name: EXTEND_SMS_RETRY-TIME
+              value: 30s
+            - name: SETTINGS_MONGODB_HOSTS
+              value: ["127.0.0.1:27017"]
+            - name: SETTINGS_MONGODB_MAXPOOLSIZE
+              value: 100
+            - name: SETTINGS_MONGODB_USERNAME
+              value:
+            - name: SETTINGS_MONGODB_PASSWORD
+              value:
+            - name: SETTINGS_MONGODB_DBNAME
+              value: "wallet-sync-index"
+            - name: SETTINGS_MONGODB_REPLICASET
+              value: ""
+            - name: SETTINGS_MONGODB_READPREFERENCE
+              value: ""
+            - name: SETTINGS_MONGODB_SERVERSELECTIONTIMEOUTS
+              value: 30s
+            - name: SETTINGS_WALLET_TOKENEXPIREMIN
+              value: 240
+            - name: SETTINGS_WALLET_SYNCINDEX
+              value: "http://127.0.0.1:8192"
+            - name: SETTINGS_SNOWFLAKE_DATACENTERID
+              value: 1
+            - name: SETTINGS_SNOWFLAKE_MACHINEID
+              value: 1
+            - name: SETTINGS_SNOWFLAKE_MAXIDLECONNS
+              value: 20
+            - name: SETTINGS_SNOWFLAKE_MAXOPENCONNS
+              value: 100
+            - name: SETTINGS_SOLARCHAIN_ENABLED
+              value: true
+            - name: SETTINGS_SOLARCHAIN_CHAINID
+              value: 65535
+            - name: SETTINGS_SOLARCHAIN_CHAINNAME
+              value: 100
+            - name: SETTINGS_SOLARCHAIN_INFRAHTTP
+              value: "https://sct.netwarps.com"
+            - name: SETTINGS_SOLARCHAIN_INFRAWEBSOCKET
+              value: "wss://sct.netwarps.com/ws"
+            - name: SETTINGS_SOLARCHAIN_NFT20ADDR
+              value: "0xc205Bd34319e17a06770EC9fef50328C804f0D14"
+            - name: SETTINGS_SOLARCHAIN_NFT20SYMBOL
+              value: "WAOT"
+            - name: SETTINGS_SOLARCHAIN_NFT20NAME
+              value: "WinsArtsOrg:ArtToken"
+            - name: SETTINGS_SOLARCHAIN_LOGOURL
+              value: "https://pnode.solarfs.io/dn/short/79b9eac1512aded45d6136179015a738-chain-wallet.png"
+            - name: SETTINGS_POLYGON_ENABLED
+              value: false
+            - name: SETTINGS_POLYGON_CHAINID
+              value: 80001
+            - name: SETTINGS_POLYGON_CHAINNAME
+              value: "polygon"
+            - name: SETTINGS_POLYGON_INFRAHTTP
+              value: "https://polygon-mumbai.g.alchemy.com/v2/IKklR2Q3T44IATgPXG9GSDnXuGLrG9hL"
+            - name: SETTINGS_POLYGON_INFRAWEBSOCKET
+              value: "wss://polygon-mumbai.g.alchemy.com/v2/IKklR2Q3T44IATgPXG9GSDnXuGLrG9hL"
+            - name: SETTINGS_POLYGON_NFT20ADDR
+              value: "0x04F8A8BE1fc2044FF38a2148a1E044b47539D5D0"
+            - name: SETTINGS_POLYGON_NFT20SYMBOL
+              value: "WAOT"
+            - name: SETTINGS_POLYGON_NFT20NAME
+              value: "WinsArtsOrg:ArtToken"
+            - name: SETTINGS_POLYGON_LOGOURL
+              value: ""

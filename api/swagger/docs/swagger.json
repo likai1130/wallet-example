@@ -1,0 +1,413 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档\n添加qq群: 521386980 进入技术交流群 请先star，谢谢！",
+        "title": "go-admin API",
+        "contact": {},
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md"
+        },
+        "version": "2.0.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "系统健康检查",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统服务"
+                ],
+                "summary": "健康检查",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\":{\"status\": \"ok\"} }",
+                        "schema": {
+                            "$ref": "#/definitions/sys.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/chains": {
+            "get": {
+                "description": "获取接口管理列表",
+                "tags": [
+                    "区块链管理"
+                ],
+                "summary": "获取区块链列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页条数",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\":\"Ok\",\"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/core.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.BlockChainList"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建一个链",
+                "tags": [
+                    "区块链管理"
+                ],
+                "summary": "创建一个链",
+                "parameters": [
+                    {
+                        "description": "链数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockchainInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\":\"Ok\"}",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/chains/{id}": {
+            "get": {
+                "description": "获取区块链详情",
+                "tags": [
+                    "区块链管理"
+                ],
+                "summary": "获取区块链详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, message:\"ok\", \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/core.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.BlockChain"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新区块链信息",
+                "tags": [
+                    "区块链管理"
+                ],
+                "summary": "更新区块链信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "链数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockchainUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\":\"Ok\"}",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "根据id删除区块链",
+                "tags": [
+                    "区块链管理"
+                ],
+                "summary": "根据id删除区块链",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, message:\"Ok\"}",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "系统版本查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统服务"
+                ],
+                "summary": "系统版本",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\":{\"version\": \"latest\"} }",
+                        "schema": {
+                            "$ref": "#/definitions/sys.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "core.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "数据集",
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BlockchainInsertReq": {
+            "type": "object",
+            "properties": {
+                "chain_id": {
+                    "type": "integer"
+                },
+                "chain_name": {
+                    "type": "string"
+                },
+                "infra_http": {
+                    "type": "string"
+                },
+                "infra_websocket": {
+                    "type": "string"
+                },
+                "symbol": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BlockchainUpdateReq": {
+            "type": "object",
+            "properties": {
+                "chain_id": {
+                    "type": "integer"
+                },
+                "chain_name": {
+                    "type": "string"
+                },
+                "infra_http": {
+                    "type": "string"
+                },
+                "infra_websocket": {
+                    "type": "string"
+                },
+                "symbol": {
+                    "type": "string"
+                }
+            }
+        },
+        "sys.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {}
+            }
+        },
+        "v1.BlockChain": {
+            "type": "object",
+            "properties": {
+                "chain_id": {
+                    "type": "integer"
+                },
+                "chain_name": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "infra_http": {
+                    "type": "string"
+                },
+                "infra_websocket": {
+                    "type": "string"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.BlockChainList": {
+            "type": "object",
+            "properties": {
+                "current_page": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v1.BlockChain"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                },
+                "total_page": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
