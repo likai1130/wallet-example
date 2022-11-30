@@ -43,11 +43,11 @@ settings:
 
 extend: # 扩展项使用说明
   sms:
-    sign-name: "SIG20210825B1BAB9"
-    template-code: "UTA21082708A7F9"
-    public-key: "4aoTwELq1JMIPOCu7KPj9G2QmlYjmgFIy4Q6H4nNY"
-    private-key: "KAImWt7Rucu62z9IitWmDX40HqVQ4DQj5HQ2gGj2aFUn4d2FXWbOzol6YfAuTFXC7d"
-    project-id: "org-vhxub0"
+    sign-name: ""
+    template-code: ""
+    public-key: ""
+    private-key: ""
+    project-id: ""
   mongodb:
     hosts: [ "127.0.0.1:27017" ]
     max-pool-size: 100
