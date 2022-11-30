@@ -9,6 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"mime"
 	_ "wallet-example/api/swagger/docs"
 	"wallet-example/internal/admin/controller/sys"
 )
@@ -17,7 +18,7 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) *gin.Rou
 	g := r.Group("")
 	sysBaseRouter(g)
 	// 静态文件
-	sysStaticFileRouter(g)
+	//sysStaticFileRouter(g)
 	// swagger；注意：生产环境可以注释掉
 	if config.ApplicationConfig.Mode != "prod" {
 		sysSwaggerRouter(g)
@@ -28,11 +29,6 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) *gin.Rou
 }
 
 func sysBaseRouter(r *gin.RouterGroup) {
-
-	/*go ws.WebsocketManager.Start()
-	go ws.WebsocketManager.SendService()
-	go ws.WebsocketManager.SendAllService()*/
-
 	r.GET("/version", sys.Version)    //版本
 	r.GET("/health", sys.HealthCheck) //健康检查
 
@@ -41,7 +37,7 @@ func sysBaseRouter(r *gin.RouterGroup) {
 
 // sysStaticFileRouter 系统文件路由
 func sysStaticFileRouter(r *gin.RouterGroup) {
-	/*err := mime.AddExtensionType(".js", "application/javascript")
+	err := mime.AddExtensionType(".js", "application/javascript")
 	if err != nil {
 		return
 	}
@@ -49,7 +45,7 @@ func sysStaticFileRouter(r *gin.RouterGroup) {
 	r.Static("/static", "./static")
 	if config.ApplicationConfig.Mode != "prod" {
 		r.Static("/form-generator", "./static/form-generator")
-	}*/
+	}
 }
 
 // sysSwaggerRouter admin swagger
