@@ -35,6 +35,106 @@ definitions:
       symbol:
         type: string
     type: object
+  dto.TbPositionDeleteReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  dto.TbPositionInsertReq:
+    properties:
+      amount:
+        type: integer
+      costPrice:
+        type: number
+      securityId:
+        type: string
+      securityName:
+        type: string
+    type: object
+  dto.TbPositionUpdateReq:
+    properties:
+      amount:
+        type: integer
+      costPrice:
+        type: number
+      id:
+        type: integer
+    type: object
+  jwtauth.Login:
+    properties:
+      code:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+      uuid:
+        type: string
+    required:
+    - code
+    - password
+    - username
+    - uuid
+    type: object
+  middleware.PresignTokenRequest:
+    properties:
+      directory:
+        type: string
+      duration:
+        type: integer
+      filename:
+        type: string
+    type: object
+  middleware.PresignTokenResponse:
+    properties:
+      token: {}
+      vendor:
+        type: string
+    type: object
+  models.TbPosition:
+    properties:
+      amount:
+        type: integer
+      costPrice:
+        type: number
+      createBy:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      securityId:
+        type: string
+      securityName:
+        type: string
+      updateBy:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  response.Page:
+    properties:
+      count:
+        type: integer
+      pageIndex:
+        type: integer
+      pageSize:
+        type: integer
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+      requestId:
+        description: 数据集
+        type: string
+      status:
+        type: string
+    type: object
   sys.Response:
     properties:
       code:
@@ -75,15 +175,218 @@ definitions:
     type: object
 info:
   contact: {}
-  description: |-
-    基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档
-    添加qq群: 521386980 进入技术交流群 请先star，谢谢！
-  license:
-    name: MIT
-    url: https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md
-  title: go-admin API
-  version: 2.0.0
+  description: 重构钱包
+  title: wallet API
 paths:
+  /api/v1/captcha:
+    get:
+      description: 获取验证码
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: string
+                id:
+                  type: string
+                msg:
+                  type: string
+              type: object
+      summary: 获取验证码
+      tags:
+      - 登陆
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        获取token
+        LoginHandler can be used by clients to get a jwt token.
+        Payload needs to be json in the form of {"username": "USERNAME", "password": "PASSWORD"}.
+        Reply will be of the form {"token": "TOKEN"}.
+        dev mode：It should be noted that all fields cannot be empty, and a value of 0 can be passed in addition to the account password
+        注意：开发模式：需要注意全部字段不能为空，账号密码外可以传入0值
+      parameters:
+      - description: account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/jwtauth.Login'
+      responses:
+        "200":
+          description: '{"code": 200, "expire": "2019-08-07T12:45:48+08:00", "token":
+            ".eyJleHAiOjE1NjUxNTMxNDgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTU2NTE0OTU0OH0.-zvzHvbg0A"
+            }'
+          schema:
+            type: string
+      summary: 登陆
+      tags:
+      - 登陆
+  /api/v1/position:
+    delete:
+      description: 删除持仓
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TbPositionDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功", "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除持仓
+      tags:
+      - 持仓
+    get:
+      description: 获取持仓列表
+      parameters:
+      - description: 编号
+        in: query
+        name: id
+        type: integer
+      - description: 代码
+        in: query
+        name: securityId
+        type: string
+      - description: 名称
+        in: query
+        name: securityName
+        type: string
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/models.TbPosition'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取持仓列表
+      tags:
+      - 持仓
+    post:
+      consumes:
+      - application/json
+      description: 创建持仓
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TbPositionInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "创建成功", "data": id}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建持仓
+      tags:
+      - 持仓
+  /api/v1/position/{id}:
+    get:
+      description: 获取持仓
+      parameters:
+      - description: 编号
+        in: path
+        name: id
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.TbPosition'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取持仓
+      tags:
+      - 持仓
+    put:
+      consumes:
+      - application/json
+      description: 修改持仓
+      parameters:
+      - description: 编号
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TbPositionUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "更新成功", "data": id}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改持仓
+      tags:
+      - 持仓
+  /api/v1/public/uploadFile:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 获取JSON
+      parameters:
+      - description: type
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '{"code": -1, "message": "添加失败"}'
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: 上传图片
+      tags:
+      - 公共接口
   /health:
     get:
       consumes:
@@ -97,6 +400,72 @@ paths:
       summary: 健康检查
       tags:
       - 系统服务
+  /presign-token:
+    post:
+      description: 预签名令牌
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/middleware.PresignTokenRequest'
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/middleware.PresignTokenResponse'
+        "500":
+          description: ""
+      security:
+      - Bearer: []
+      summary: 预签名令牌
+      tags:
+      - 公共接口
+  /public/downloadFile/{pathname}/{filename}:
+    get:
+      description: 下载文件
+      parameters:
+      - description: pathname
+        in: path
+        name: pathname
+        required: true
+        type: string
+      - description: filename
+        in: path
+        name: filename
+        required: true
+        type: string
+      - description: as
+        in: query
+        name: as
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: ""
+      security:
+      - Bearer: []
+      summary: 下载文件
+      tags:
+      - 公共接口
+  /server-monitor:
+    get:
+      description: 获取JSON
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 系统信息
+      tags:
+      - 系统信息
   /v1/chains:
     get:
       description: 获取接口管理列表
@@ -261,7 +630,7 @@ paths:
       tags:
       - 系统服务
 securityDefinitions:
-  Bearer:
+  ApiKeyAuth:
     in: header
     name: Authorization
     type: apiKey

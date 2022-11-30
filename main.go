@@ -5,7 +5,7 @@ import (
 	"wallet-example/cmd/api"
 )
 
-//go:generate swag init -o ./api/swagger/docs
+//go:generate swag init --parseDependency --parseDepth=5 -o ./api/swagger/docs
 
 // @title wallet API
 // @description 重构钱包
